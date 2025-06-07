@@ -8,14 +8,15 @@ AstrBot plugin for triggering and calling n8n webhooks.
 ## 调用方法
 
 > [!note]
-> 目标会话标识可用/sid查看。/sid 指令返回的结果中的 SID 就是 umo 。
+> 在对话中使用`/n8n`触发调用n8n, 比如`/n8n ob:#创意 #想法 #日志 可以做一个n8n的插件`
 
 ### **1. 发送消息**  
 **Endpoint:**  
 `POST https://your-n8n-domain.com/webhook/your-path`  
 
-**Headers:**  
-- `Authorization: Bearer <API_TOKEN>`  
+**Basic Auth:**  
+- `username: 'username-you-need-change'`
+- `password: 'password-you-need-change'`
 
 **Request Body (JSON):**  
 ```json
@@ -23,16 +24,16 @@ AstrBot plugin for triggering and calling n8n webhooks.
   "content": "消息内容或base64编码的图片",
   "umo": "目标会话标识",
   "type": "可选，消息类型，默认为text，可选值：text, image",
-  "callback_url": "可选，处理结果回调URL"
+  "from": "from-id"
 }
 ```
 
 **Response:**  
 ```json
 {
-  "status": "queued",
-  "message_id": "生成的消息ID",
-  "queue_size": 1
+  "success": true,
+  "message": "n8n响应的message",
+  "handledBy": "obsidian"
 }
 ```
 
