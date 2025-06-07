@@ -10,7 +10,7 @@ AstrBot plugin for triggering and calling n8n webhooks.
 > [!note]
 > 在对话中使用`/n8n`触发调用n8n, 比如`/n8n ob:#创意 #想法 #日志 可以做一个n8n的插件`
 
-### **1. 发送消息**  
+### **1. 配置当前插件(同时配置n8n webhook)**  
 **Endpoint:**  
 `POST https://your-n8n-domain.com/webhook/your-path`  
 
