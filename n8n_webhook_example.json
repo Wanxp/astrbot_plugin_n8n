@@ -1,0 +1,90 @@
+{
+    "name": "n8n_webhook_example",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "astrbot",
+          "authentication": "basicAuth",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          -300,
+          0
+        ],
+        "id": "43e9119d-16b1-421e-8a46-7a67a4acfa08",
+        "name": "等待astrbot请求",
+        "webhookId": "d61d2b48-3c74-45b7-b737-4f8d514f195d",
+        "credentials": {
+          "httpBasicAuth": {
+            "id": "HJQqWxrRogSkLbrb",
+            "name": "webhook"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          -120,
+          0
+        ],
+        "id": "0aede487-c2b7-482e-aca9-5e19915d4d1d",
+        "name": "修改成你的逻辑"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "{\n  \"success\": true,\n  \"data\": \"需要显示的回答内容\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          60,
+          0
+        ],
+        "id": "315d1c4f-b532-404b-9d2a-f4f701bb0c72",
+        "name": "响应给webhook,可以多个"
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "等待astrbot请求": {
+        "main": [
+          [
+            {
+              "node": "修改成你的逻辑",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "修改成你的逻辑": {
+        "main": [
+          [
+            {
+              "node": "响应给webhook,可以多个",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "ae2f776acc4b3d7ec013ba736ede90afd36cb5875ac14f4f133a6f823f5a8ae6"
+    },
+    "tags": []
+  }
