@@ -40,3 +40,5 @@ AstrBot plugin for triggering and calling n8n webhooks.
 }
 ```
 ---
+
+可以在n8n导入[n8n_webhook_example](./n8n_webhook_example.json)案例使用本插件对接
