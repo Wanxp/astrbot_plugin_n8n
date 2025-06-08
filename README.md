@@ -8,7 +8,13 @@ AstrBot plugin for triggering and calling n8n webhooks.
 ## 调用方法
 
 > [!note]
-> 在对话中使用`/n8n`触发调用n8n, 比如`/n8n ob:#创意 #想法 #日志 可以做一个n8n的插件`
+> 在对话中使用`/n8n`触发调用n8n, 比如`/n8n ob:#创意 #想法 #日志 可以做一个n8n的插件` 则会调用n8n webhook,内容是
+> ```json
+{
+  "message": "ob:#创意 #想法 #日志 可以做一个n8n的插件",
+  "senderName": "somebody"
+}
+> ```
 
 ### **1. 配置当前插件(同时配置n8n webhook)**  
 **Endpoint:**  
@@ -21,10 +27,8 @@ AstrBot plugin for triggering and calling n8n webhooks.
 **Request Body (JSON):**  
 ```json
 {
-  "content": "消息内容或base64编码的图片",
-  "umo": "目标会话标识",
-  "type": "可选，消息类型，默认为text，可选值：text, image",
-  "from": "from-id"
+  "message": "消息内容或base64编码的图片",
+  "senderName": "消息发送人"
 }
 ```
 
@@ -32,9 +36,7 @@ AstrBot plugin for triggering and calling n8n webhooks.
 ```json
 {
   "success": true,
-  "message": "n8n响应的message",
-  "handledBy": "obsidian"
+  "data": "n8n响应的message"
 }
 ```
-
 ---

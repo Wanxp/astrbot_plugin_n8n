@@ -1,20 +1,25 @@
 {
-  "api": {
+  "n8n": {
     "description": "N8N WEBHOOK 配置",
     "type": "object",
     "items": {
-      "host": {
-        "description": "N8N 监听地址，比如https://your-n8n-domain/webhook/your-path",
+      "adminIds": {
+        "description": "发送者的ids,逗号分割, 只有这些才会触发调用",
+        "type": "string",
+        "default": "wxid_xxxxx,wxid_yyyyy"
+      },
+      "n8n_webhook_url": {
+        "description": "N8N 监听地址,比如 https://your-domain/webhook/path",
         "type": "string",
         "default": "https://your-n8n-domain/webhook/your-path"
       },
       "username": {
-        "description": "Basic Auth username, 你需要设置n8n webhook 的鉴权方式为Basic Auth, 这是你配置的 username",
+        "description": "Basic Auth username",
         "type": "string",
         "default": "test"
       },
       "password": {
-        "description": "Basic Auth password, 你需要设置n8n webhook 的鉴权方式为Basic Auth, 这是你配置的 password",
+        "description": "Basic Auth password",
         "type": "string",
         "default": "test"
       }

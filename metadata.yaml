@@ -1,5 +1,5 @@
 name: astrbot_plugin_n8n 
-desc: 这是 AstrBot 的调用 n8n 的插件，支持通过指定关键词调用n8n的webhook。
+desc: 调用 n8n 的插件，支持通过指定关键词/n8n调用n8n的webhook。
 version: v1.0
 author: Wanxp
 repo: https://github.com/Wanxp/astrbot_plugin_n8n
