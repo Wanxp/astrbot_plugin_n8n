@@ -10,6 +10,7 @@ FOLDER_PATH = "D:/coding/code/python/astrbotplg/AstrBot/data/plugins/astrbot_plu
 def delete_old_files(folder_path, time_threshold):
     time_threshold = time_threshold*60
     current_time = time.time()
+
     for filename in os.listdir(folder_path):
         file_path = os.path.join(folder_path, filename)
         if os.path.isfile(file_path):

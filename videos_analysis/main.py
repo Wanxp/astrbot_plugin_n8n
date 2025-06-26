@@ -39,10 +39,10 @@ class hybird_videos_analysis(Star):
                                                   config.get("cloudreve_password"), 
                                                   config.get("cloudreve_upload_path"))
 # @filter.event_message_type(EventMessageType.ALL)
-    async def auto_parse(self, event: AstrMessageEvent, *args, **kwargs) -> []:
+    async def auto_parse(self, event: AstrMessageEvent, *args, **kwargs) :
         return await self.auto_parse_dy(event, *args, **kwargs)
 
-    async def auto_parse_dy(self, event: AstrMessageEvent, *args, **kwargs) -> []:
+    async def auto_parse_dy(self, event: AstrMessageEvent, *args, **kwargs) -> tuple[[], str]:
         """
         自动检测消息中是否包含抖音分享链接，并解析。
         """
@@ -51,7 +51,7 @@ class hybird_videos_analysis(Star):
         message_str = event.message_str
         match = re.search(r'(https?://v\.douyin\.com/[a-zA-Z0-9_\-]+(?:-[a-zA-Z0-9_\-]+)?)', message_str)
         if self.delate_time != 0:
-            delete_old_files("data/plugins/astrbot_plugin_videos_analysis/download_videos/dy", self.delate_time)
+            delete_old_files("data/plugins/astrbot_plugin_n8n/videos_analysis/download_videos/dy", self.delate_time)
             # if event.get_platform_name() == "aiocqhttp":
             #     # qq
             #     from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import AiocqhttpMessageEvent
@@ -77,29 +77,29 @@ class hybird_videos_analysis(Star):
                             file_path = result['save_path'][i]
                             ns.append(file_path)
                             # print(f"发送多段视频: {ns}")  # 添加日志记录
-                        file_urls = await self.upload_files_and_get_direct_url(ns, 'video')
-                        yield file_urls, 'video'
+                        file_urls = await self.upload_files_and_get_direct_url(ns, 'video', event)
+                        return file_urls, 'video'
                     else:
                         file_path = result['save_path'][0]
-                        file_urls = await self.upload_files_and_get_direct_url(file_path, 'video')
-                        yield file_urls, 'video'
+                        file_urls = await self.upload_files_and_get_direct_url(file_path, 'video', event)
+                        return file_urls, 'video'
                 elif result['type'] == "image":
                     if result['is_multi_part']:
                         ns = []
                         for i in range(result['count']):
                             file_path = result['save_path'][i]
                             ns.append(file_path)
-                        file_urls = await self.upload_files_and_get_direct_url(ns, 'image')
-                        yield file_urls, 'image'
+                        file_urls = await self.upload_files_and_get_direct_url(ns, 'image', event)
+                        return file_urls, 'image'
                     else:
                         file_path = result['save_path'][0]
-                        file_urls = await self.upload_files_and_get_direct_url(file_path, 'image')
-                        yield file_urls, 'image'
+                        file_urls = await self.upload_files_and_get_direct_url(file_path, 'image', event)
+                        return file_urls, 'image'
                 else:
                     print("解析失败，请检查链接是否正确。")
             else:
                 print("解析失败，请检查链接是否正确。")  # 添加日志记录
-                yield event.plain_result("检测到抖音链接，但解析失败，请检查链接是否正确。")
+                event.plain_result("检测到抖音链接，但解析失败，请检查链接是否正确。")
 
     # @filter.event_message_type(EventMessageType.ALL)
     async def auto_parse_bili(self, event: AstrMessageEvent, *args, **kwargs):
@@ -560,8 +560,8 @@ class hybird_videos_analysis(Star):
                 yield event.plain_result("解析MC百科信息失败，请检查链接是否正确。")
                 yield event.plain_result("解析MC百科信息失败，请检查链接是否正确。")
 
-    async def upload_files_and_get_direct_url(self, file_paths: list[str], type: str) -> []:
-        return await self.cloudreve_handler.upload_file (file_paths, type)
+    async def upload_files_and_get_direct_url(self, file_paths: list[str], type: str, event: AstrMessageEvent) -> []:
+        return await self.cloudreve_handler.upload_file (file_paths, type, event)
         
         
 

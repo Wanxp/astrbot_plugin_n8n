@@ -13,7 +13,7 @@ class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
         self.config = config
-        self.media_analyzer = hybird_videos_analysis(context, config)
+        self.media_analyzer = hybird_videos_analysis(context, config.get('n8n'))
 
     async def initialize(self):
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
@@ -49,7 +49,7 @@ class MyPlugin(Star):
                 break
         if isAdmin is False:
             logger.warning(
-                f"用户 {sender_name} ({event.sender_id}) 没有权限调用 n8n 插件"
+                f"用户 {sender_name} ({event.session_id}) 没有权限调用 n8n 插件"
             )
             return
         username = self.config["n8n"].get("username")  # 从配置中获取 n8n 的 webhook URL
