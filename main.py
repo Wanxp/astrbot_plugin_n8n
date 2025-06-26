@@ -5,12 +5,15 @@ from astrbot.core.config.astrbot_config import AstrBotConfig
 from astrbot.api.message_components import *
 import aiohttp
 
+from data.plugins.astrbot_plugin_n8n.astrbot_plugin_videos_analysis.main import hybird_videos_analysis
+
 
 @register("astrbot_plugin_n8n", "Wanxp", "一个调用n8n webhook插件", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
         self.config = config
+        self.media_analyzer = hybird_videos_analysis(context, context)
 
     async def initialize(self):
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
@@ -56,6 +59,7 @@ class MyPlugin(Star):
             "n8n", "", 1
         ).strip()  # 去掉指令名，保留用户输入的内容
         try:
+            await self.media_analyzer.auto_parse_dy(event)
             async with aiohttp.ClientSession() as session:
                 async with session.post(
                     url=url,
