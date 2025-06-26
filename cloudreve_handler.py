@@ -97,9 +97,9 @@ class CloudreveHandler:
                             self.refresh_token = token.get("refresh_token")
                             self.access_expires = datetime.strptime(token.get("access_expires"))
                             self.refresh_expires = datetime.strptime(token.get("refresh_expires"))
-         except Exception as e:
-                logger.error(f"上传文件时发生错误: {e}")
-                yield event.plain_result(f"上传文件失败: {str(e)}")
+        except Exception as e:
+            logger.error(f"上传文件时发生错误: {e}")
+            yield event.plain_result(f"上传文件失败: {str(e)}")
 
     async def upload_files(self, file_paths:list[str], type: str, event: AstrMessageEvent):
         file_name = os.path.basename(file_paths[0])
@@ -118,6 +118,7 @@ class CloudreveHandler:
 
 
     async def upload_file(self, file_path, type: str, event: AstrMessageEvent):
+
         """上传文件到 Cloudreve"""
         file_name = os.path.basename(file_path)
         folder_uri = f"cloudreve://{self.cloud_upload_folder_path}/{type}"
@@ -139,6 +140,7 @@ class CloudreveHandler:
             return None
 
     async def create_upload_file_session(self, file_name, uri, file_path, event: AstrMessageEvent):
+        self.before_request(event)
         """创建上传文件会话"""
         if not os.path.exists(file_path):
             logger.error(f"文件 {file_path} 不存在")
@@ -189,6 +191,7 @@ class CloudreveHandler:
         return None, None
 
     async def _upload_file_(self, session_id, chunk_size, file_path, event: AstrMessageEvent):
+        self.before_request(event)
         """上传文件到 Cloudreve"""
         headers = {
             "Authorization": f"Bearer {self.access_token}" if self.access_token else None,
@@ -213,6 +216,7 @@ class CloudreveHandler:
                         index += 1
 
     async def close_upload_file_session(self, session_id, uri, event: AstrMessageEvent):
+        self.before_request(event)
         """关闭上传文件会话"""
         headers = {
             "Authorization": f"Bearer {self.access_token}" if self.access_token else None,
@@ -238,6 +242,7 @@ class CloudreveHandler:
             await event.plain_result(f"关闭上传会话失败: {str(e)}")
 
     async def get_files_direct_url(self, uris, event):
+        self.before_request(event)
         """获取文件直链"""
         headers = {
             "Authorization": f"Bearer {self.access_token}" if self.access_token else None,
@@ -279,6 +284,7 @@ class CloudreveHandler:
         return None
 
     async def create_folder(self, folder_uri, event):
+        self.before_request(event)
         data = {
             "type": "folder",
             "uri": folder_uri,
@@ -305,4 +311,7 @@ class CloudreveHandler:
             logger.error(f"创建文件夹时发生 错误: {e}")
             await event.plain_result(f"创建文件夹 失败: {str(e)}")
         return None, None
+
+    def before_request(self, event):
+        self.refresh_token(event)
 

@@ -39,6 +39,9 @@ class hybird_videos_analysis(Star):
                                                   config.get("cloudreve_password"), 
                                                   config.get("cloudreve_upload_path"))
 # @filter.event_message_type(EventMessageType.ALL)
+    async def auto_parse(self, event: AstrMessageEvent, *args, **kwargs) -> []:
+        return await self.auto_parse_dy(event, *args, **kwargs)
+
     async def auto_parse_dy(self, event: AstrMessageEvent, *args, **kwargs) -> []:
         """
         自动检测消息中是否包含抖音分享链接，并解析。
@@ -75,11 +78,11 @@ class hybird_videos_analysis(Star):
                             ns.append(file_path)
                             # print(f"发送多段视频: {ns}")  # 添加日志记录
                         file_urls = await self.upload_files_and_get_direct_url(ns, 'video')
-                        return file_urls
+                        yield file_urls, 'video'
                     else:
                         file_path = result['save_path'][0]
                         file_urls = await self.upload_files_and_get_direct_url(file_path, 'video')
-                        return file_urls
+                        yield file_urls, 'video'
                 elif result['type'] == "image":
                     if result['is_multi_part']:
                         ns = []
@@ -87,11 +90,11 @@ class hybird_videos_analysis(Star):
                             file_path = result['save_path'][i]
                             ns.append(file_path)
                         file_urls = await self.upload_files_and_get_direct_url(ns, 'image')
-                        return file_urls
+                        yield file_urls, 'image'
                     else:
                         file_path = result['save_path'][0]
                         file_urls = await self.upload_files_and_get_direct_url(file_path, 'image')
-                        return file_urls
+                        yield file_urls, 'image'
                 else:
                     print("解析失败，请检查链接是否正确。")
             else:
