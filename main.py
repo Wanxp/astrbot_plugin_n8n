@@ -20,7 +20,7 @@ class MyPlugin(Star):
 
     # 注册指令的装饰器。指令名为 n8n 。注册成功后，发送 `/n8n` 就会触发这个指令，并回复 `你好, {user_name}!`
 
-    @filter.command("/n")
+    @filter.command("n")
     async def call_n8n(self, event: AstrMessageEvent):
         """这是一个 调用n8n 的指令"""
         message_str, sender_name, url, username, password = self.message_str(event)
