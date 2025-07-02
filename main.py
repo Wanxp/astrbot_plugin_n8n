@@ -19,8 +19,31 @@ class MyPlugin(Star):
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
 
     # 注册指令的装饰器。指令名为 n8n 。注册成功后，发送 `/n8n` 就会触发这个指令，并回复 `你好, {user_name}!`
+
+    @filter.command("/n")
+    async def call_n8n(self, event: AstrMessageEvent):
+        """这是一个 调用n8n 的指令"""
+        message_str, sender_name, url, username, password = self.message_str(event)
+        # 移除掉第一个'n8n'
+        message_str = message_str.replace(
+            "n", "", 1
+        ).strip()  # 去掉指令名，保留用户输入的内容
+
+        if message_str is None:
+            yield event.plain_result("请提供 n8n 的调用内容。")
+            return
+        message_str = f'ob: {message_str}'
+        await self.on_message(message_str, sender_name, url, username, password, event)
+
     @filter.command("n8n")
     async def call_n8n(self, event: AstrMessageEvent):
+        message_str, sender_name, url, username, password = self.message_str(event)
+        message_str = message_str.replace(
+            "n8n", "", 1
+        ).strip()  # 去掉指令名，保留用户输入的内容
+        await self.on_message(message_str, sender_name, url, username, password, event)
+
+    def message_str(self, event: AstrMessageEvent):
         """这是一个 调用n8n 的指令"""  # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
         sender_name = event.get_sender_name()
         message_str = event.message_str  # 用户发的纯文本消息字符串
@@ -54,10 +77,12 @@ class MyPlugin(Star):
             return
         username = self.config["n8n"].get("username")  # 从配置中获取 n8n 的 webhook URL
         password = self.config["n8n"].get("password")  # 从配置中获取 n8n 的 webhook URL
-        # 移除掉第一个'n8n'
-        message_str = message_str.replace(
-            "n8n", "", 1
-        ).strip()  # 去掉指令名，保留用户输入的内容
+        return message_str, sender_name, url, username, password
+
+
+
+    async def on_message(self,message_str, sender_name, url, username, password, event: AstrMessageEvent):
+
         try:
             file_urls, file_type = await self.media_analyzer.auto_parse(event)
             async with aiohttp.ClientSession() as session:
