@@ -81,7 +81,7 @@ class hybird_videos_analysis(Star):
                         return file_urls, 'video'
                     else:
                         file_path = result['save_path'][0]
-                        file_urls = await self.upload_files_and_get_direct_url(file_path, 'video', event)
+                        file_urls = await self.upload_files_and_get_direct_url([file_path], 'video', event)
                         return file_urls, 'video'
                 elif result['type'] == "image":
                     if result['is_multi_part']:
@@ -93,7 +93,7 @@ class hybird_videos_analysis(Star):
                         return file_urls, 'image'
                     else:
                         file_path = result['save_path'][0]
-                        file_urls = await self.upload_files_and_get_direct_url(file_path, 'image', event)
+                        file_urls = await self.upload_files_and_get_direct_url([file_path], 'image', event)
                         return file_urls, 'image'
                 else:
                     print("解析失败，请检查链接是否正确。")
@@ -125,7 +125,7 @@ class hybird_videos_analysis(Star):
         match = re.search(r'(https?://b23\.tv/[\w]+|https?://bili2233\.cn/[\w]+|BV1\w{9}|av\d+)', message_str)
 
         if self.delate_time != 0:
-            delete_old_files("data/plugins/astrbot_plugin_videos_analysis/download_videos/bili/", self.delate_time)  # 删除过期文件
+            delete_old_files("data/plugins/astrbot_plugin_n8n/videos_analysis/download_videos/bili/", self.delate_time)  # 删除过期文件
 
         if match or match_json:
             if match:
@@ -561,8 +561,8 @@ class hybird_videos_analysis(Star):
                 yield event.plain_result("解析MC百科信息失败，请检查链接是否正确。")
 
     async def upload_files_and_get_direct_url(self, file_paths: list[str], type: str, event: AstrMessageEvent) -> []:
-        return await self.cloudreve_handler.upload_file (file_paths, type, event)
-        
+        return await self.cloudreve_handler.upload_files_and_get_file_direct_url (file_paths, type, event)
+
         
 
 

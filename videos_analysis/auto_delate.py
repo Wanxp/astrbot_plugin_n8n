@@ -5,7 +5,7 @@ import time
 TIME_THRESHOLD = 60
 
 # 指定文件夹路径
-FOLDER_PATH = "D:/coding/code/python/astrbotplg/AstrBot/data/plugins/astrbot_plugin_videos_analysis/download_videos/dy"
+FOLDER_PATH = "D:/coding/code/python/astrbotplg/AstrBot/data/plugins/astrbot_plugin_n8n/videos_analysis/download_videos/dy"
 
 def delete_old_files(folder_path, time_threshold):
     time_threshold = time_threshold*60
