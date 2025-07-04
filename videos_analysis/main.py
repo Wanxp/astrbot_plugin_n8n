@@ -39,8 +39,20 @@ class hybird_videos_analysis(Star):
                                                   config.get("cloudreve_password"), 
                                                   config.get("cloudreve_upload_path"))
 # @filter.event_message_type(EventMessageType.ALL)
-    async def auto_parse(self, event: AstrMessageEvent, *args, **kwargs) :
-        return await self.auto_parse_dy(event, *args, **kwargs)
+    async def auto_parse(self, event: AstrMessageEvent, message_str: str, *args, **kwargs) :
+        match = re.search(r'(https?://v\.douyin\.com/[a-zA-Z0-9_\-]+(?:-[a-zA-Z0-9_\-]+)?)', message_str)
+        if match:
+            return await self.auto_parse_dy(event, *args, **kwargs)
+        match = re.search(r'(https?://b23\.tv/[\w]+|https?://bili2233\.cn/[\w]+|BV1\w{9}|av\d+)', message_str)
+        if match:
+            return await self.auto_parse_bili(event, *args, **kwargs)
+        match = re.search(r'(https?://xhslink\.com/[a-zA-Z0-9/]+)', message_str)
+        if match:
+            return await self.auto_parse_xhs(event, *args, **kwargs)
+        match = re.search(r'(https?://www\.mcmod\.cn/class/\d+\.html|https?://www\.mcmod\.cn/modpack/\d+\.html)', message_str)
+        if match:
+            return await self.auto_parse_mcmod(event, *args, **kwargs)
+        return None, None
 
     async def auto_parse_dy(self, event: AstrMessageEvent, *args, **kwargs) -> tuple[[], str]:
         """
@@ -66,8 +78,9 @@ class hybird_videos_analysis(Star):
             #     # yield event.plain_result(f"{response_str}")
         if match:
             url = match.group(1)
-            # print(f"检测到抖音链接: {url}")  # 添加日志记录
+            logger.info(f"检测到抖音链接: {url}")  # 添加日志记录
             result = await process_douyin(url,api_url)  # 使用 await 调用异步函数
+            logger.info(f"解析结果: {result}")  # 添加日志记录
             if result:
                 # print(f"解析结果: {result}")  # 添加日志记录
                 if result['type'] == "video":

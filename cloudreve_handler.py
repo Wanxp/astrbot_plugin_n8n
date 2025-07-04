@@ -141,8 +141,11 @@ class CloudreveHandler:
         return uri
 
     async def upload_files_and_get_file_direct_url(self, file_paths: list[str] , type: str, event: AstrMessageEvent):
+        logger.info(f"开始上传 文件: {file_paths} 到 Cloudreve, 类型: {type}")
         uris = await self.upload_files(file_paths, type, event)
+        logger.info(f"上传文件完成, 返回的 URIs: {uris}, 准备获取直链")
         links = await self.get_files_direct_url(uris, event)
+        logger.info(f"获取直链完成, 返回的直链: {links}")
         if links:
             return links
         else:
